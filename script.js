@@ -59,10 +59,11 @@ function onAutoSuggestRecieved(data) {
         // loop through all output words...
         for (var i = 0; i < autoSuggestionWords.length; i++) {
 
-            var newInputWord;
             var autoSuggestWord = autoSuggestionWords[i].toLowerCase();
-            console.log('autoSuggestWord: ', autoSuggestWord);
-            
+
+            var newInputWord;
+            var matchFound = false;
+
             // and check if any of the input words match
             for (var j = 0; j < inputWords.length; j++) {
                 
@@ -70,36 +71,30 @@ function onAutoSuggestRecieved(data) {
                 
                 if (inputWord != "") {
 
-                    // if a match hasn't already been found for this word
-                    if (wordMatches.indexOf(inputWord) == -1) {
+                    // if the new output word IS OR CONTAINS the previous input word
+                    if (autoSuggestWord.indexOf(inputWord.toLowerCase()) != -1) {
 
-                        // if the new output word IS OR CONTAINS the previous input word
-                        if (autoSuggestWord.indexOf(inputWord) != -1) {
+                        console.log('CHECK THIS ' + inputWord);
+                        newInputWord = autoSuggestWord.replace(new RegExp('(' + inputWord + ')|.','gi'), function(c) {
+                            return c === inputWord.toLowerCase() ? c : replaceChar;
+                        });
 
-                            console.log('inputWord: ' + inputWord);
-                            
-                            newInputWord = autoSuggestWord.replace(new RegExp('(' + inputWord + ')|.','gi'), function(c) {
-                                return c === inputWord ? c : replaceChar;
-                            });
-
-                            console.log('newInputWord: ' + newInputWord);
-
-                            // originalWords.push(inputWord);
-                            // wordMatches.push(inputWord);
-                            console.log(wordMatches);
-
-                        } else {
-                            console.log('fired else');
-                            newInputWord = new Array(autoSuggestWord.length + 1).join(replaceChar);
-                        }
-                        
-                        wordMatches.push(inputWord);
+                        matchFound = true;
+                        console.log('match found for "' + newInputWord + '" when checking against "' + autoSuggestWord + '"'); 
+                        break; //break out of `j` for loop
+                    } else {
+                        console.log('match NOT found for "' + inputWord + '" when checking against "' + autoSuggestWord + '"');
                     }
                 }
             }
+            
+            if (!matchFound) {
+                // console.log('got here');
+                newInputWord = new Array(autoSuggestWord.length + 1).join(replaceChar);
+            }
 
             newInputWords.push(newInputWord);
-            console.log(newInputWords);          
+            // console.log(newInputWords);          
         }
 
         // console.log(wordMatches);
