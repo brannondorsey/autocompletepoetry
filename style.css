@@ -1,20 +1,37 @@
 body {
-	margin-top: 7em;
+	
+	margin-top: 5em;
+}
+
+#instructions {
+	font-family: Courier, monospace;
+	font-size: 1em;
+	color: #C6C5C5;
+	width: 50%;
+	margin: auto;
+	margin-bottom: 2.5em;
+}
+
+#io-container {
+
+	overflow: hidden;
 }
 
 #input, #output{
+
 	font-family: Courier, monospace;
 	font-size: 1.8em;
 }
 
 p#output {
-	width: 70%;
+
+	width: 90%;
 	margin: 0em;
 	padding: .6em;
 }
 
 textarea {
-	/*border: none;*/
+
 	width: 70%;
 	height: 10em;
 	display: block;
@@ -25,13 +42,34 @@ textarea {
 }
 
 textarea:focus {
+
 	outline: none;
 	border-color: #C4C4C4;
 }
 
 #input-container, #output-container {
+
 	width: 50%;
 	margin: none;
 	float: left;
 	padding: 0em;
+}
+
+button {
+
+	display: inline-block;
+	margin: 1em 6%;
+	padding: 0em .7em;
+	font-family: Courier, monospace;
+	background-color: #ffffff;
+	border: 1px solid #000000;
+	border-radius: .1em;
+	font-size: 1.5em;
+	cursor: pointer;
+}
+
+button:hover {
+
+	background-color: #000000;
+	color: #ffffff;
 }

@@ -8,17 +8,23 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script type="text/javascript" src="script.js"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
     </head>
 
     <body>
 
-        <div id="input-container">
-            <textarea id="input" onkeyup="autoSuggest(this.value)" placeholder="input"></textarea>
+        <p id="instructions">Write an incomplete sentence, press ".", and see what happens. Then keep doing that to make a poem :)</p>
+        <div id="io-container">
+
+            <div id="input-container">
+                <textarea id="input" onkeyup="autoSuggest(this.value)" placeholder="input"></textarea>
+            </div>
+            <div id="output-container">
+
+                <p id="output" style="float: right">output</p>
+            </div>
         </div>
-        <div id="output-container">
-            <p id="output">output</p>
-        </div>
+
+        <button onclick="undo()" title="undo">⎌</button>
     </body>
 </html>
 

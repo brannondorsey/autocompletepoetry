@@ -3,13 +3,11 @@ var input = "";
 var output = "";
 var inputSentence; 
 
-
 function autoSuggest(textValue) {
 
     var lastCharacter = textValue.charAt(textValue.length - 1);
     
     if (lastCharacter == '.') {
-        
 
         // remove the last period, we will add it back later
         textValue = textValue.substring(0, textValue.length - 1);
@@ -21,7 +19,7 @@ function autoSuggest(textValue) {
         } else { // if this is the first sentence
             inputSentence = textValue.trimLeft();
         }
-        // console.log(inputSentence);
+        
         $.getJSON("http://suggestqueries.google.com/complete/search?callback=?", {
             "jsonp": "onAutoSuggestRecieved",
             "q": inputSentence, // query term                
@@ -33,17 +31,21 @@ function autoSuggest(textValue) {
 function onAutoSuggestRecieved(data) {
     
     // console.log(data);
-    var suggestions = [];
+    var suggestions = []; // declare new array
+    var results = data[1];
 
-    $.each(data[1], function(key, val) {
-        suggestions.push({"value":val[0]});
-    });
-    suggestions.length = 5; // prune suggestions list to only 5 item
+    for (var i = 0; i < results.length; i++) {
+        var value = results[i][0];
+        suggestions.push(value);
+    }
 
-    if (typeof suggestions[0] !== 'undefined') {
+    var randomIndex = Math.floor(Math.random() * suggestions.length);
+    var suggestion = suggestions[randomIndex];
+
+    if (typeof suggestion !== 'undefined') {
         
         // edit output
-        var autoSuggestion = uCFirst(suggestions[0].value);
+        var autoSuggestion = uCFirst(suggestion);
         output += ' ' + autoSuggestion + '.';
         $('#output').text(output);
         
@@ -74,30 +76,28 @@ function onAutoSuggestRecieved(data) {
                     // if the new output word IS OR CONTAINS the previous input word
                     if (autoSuggestWord.indexOf(inputWord.toLowerCase()) != -1) {
 
-                        console.log('CHECK THIS ' + inputWord);
                         newInputWord = autoSuggestWord.replace(new RegExp('(' + inputWord + ')|.','gi'), function(c) {
                             return c === inputWord.toLowerCase() ? c : replaceChar;
                         });
 
                         matchFound = true;
-                        console.log('match found for "' + newInputWord + '" when checking against "' + autoSuggestWord + '"'); 
+                        // console.log('match found for "' + newInputWord + '" when checking against "' + autoSuggestWord + '"'); 
                         break; //break out of `j` for loop
-                    } else {
-                        console.log('match NOT found for "' + inputWord + '" when checking against "' + autoSuggestWord + '"');
-                    }
+
+                    } 
+
+                    // else {
+                    //     console.log('match NOT found for "' + inputWord + '" when checking against "' + autoSuggestWord + '"');
+                    // }
                 }
             }
             
             if (!matchFound) {
-                // console.log('got here');
                 newInputWord = new Array(autoSuggestWord.length + 1).join(replaceChar);
             }
 
-            newInputWords.push(newInputWord);
-            // console.log(newInputWords);          
+            newInputWords.push(newInputWord);      
         }
-
-        // console.log(wordMatches);
 
         input += ' ' + uCFirst(newInputWords.join(' ')) + '.';
 
@@ -107,8 +107,20 @@ function onAutoSuggestRecieved(data) {
     }
 }
 
-
 function uCFirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// removes the last sentence
+function undo() {
+
+    var input = $('#input').val();
+    var appendChar = (input.split('.').length - 1 > 2) ? '.' : '';
+    input = input.substring(0, input.length - 1); // remove last period
+    $('#input').val(input.substring(0, input.lastIndexOf('.')) + appendChar);
+
+    var output = $('#output').text();
+    output = output.substring(0, output.length - 1); // remove last period
+    $('#output').text(output.substring(0, output.lastIndexOf('.')) + appendChar);
 }
     
