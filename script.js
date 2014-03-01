@@ -1,7 +1,7 @@
 var replaceChar = "█" // black box
 var input = "";
 var output = "";
-var previousSentence; 
+var inputSentence; 
 
 
 function autoSuggest(textValue) {
@@ -17,21 +17,21 @@ function autoSuggest(textValue) {
 
         // if there is more than one sentence
         if (previousPeriodIndex != -1) {
-            previousSentence = textValue.substring(previousPeriodIndex + 1, textValue.length).trimLeft();
+            inputSentence = textValue.substring(previousPeriodIndex + 1, textValue.length).trimLeft();
         } else { // if this is the first sentence
-            previousSentence = textValue.trimLeft();
+            inputSentence = textValue.trimLeft();
         }
-        // console.log(previousSentence);
+        // console.log(inputSentence);
         $.getJSON("http://suggestqueries.google.com/complete/search?callback=?", {
             "jsonp": "onAutoSuggestRecieved",
-            "q": previousSentence, // query term                
+            "q": inputSentence, // query term                
             "client":"youtube" // a hack to return results as json
         });
     }
 }
 
 function onAutoSuggestRecieved(data) {
-    console.log('recieved');
+    
     // console.log(data);
     var suggestions = [];
 
@@ -43,57 +43,73 @@ function onAutoSuggestRecieved(data) {
     if (typeof suggestions[0] !== 'undefined') {
         
         // edit output
-        var newestOutputSentence = uCFirst(suggestions[0].value);
-        output += ' ' + newestOutputSentence + '.';
+        var autoSuggestion = uCFirst(suggestions[0].value);
+        output += ' ' + autoSuggestion + '.';
         $('#output').text(output);
         
         // edit input
+        var originalWords = [];
+
         var newInputWords = [];
-        var wordMatches = [];
-        var previousWords = previousSentence.split(' ');
-        var newestOutputWords = newestOutputSentence.split(' ');
+        var wordMatches = []; // keeps track of input words that remain the same when converted to output
+        var inputWords = inputSentence.split(' ');
+        
+        var autoSuggestionWords = autoSuggestion.split(' ');
         
         // loop through all output words...
-        for (var i = 0; i < newestOutputWords.length; i++) {
+        for (var i = 0; i < autoSuggestionWords.length; i++) {
 
-            var newOutputWord = newestOutputWords[i];
-
+            var newInputWord;
+            var autoSuggestWord = autoSuggestionWords[i].toLowerCase();
+            console.log('autoSuggestWord: ', autoSuggestWord);
+            
             // and check if any of the input words match
-            for (var j = 0; j < previousWords.length; j++) {
-                var previousInputWord = previousWords[j];
-                if (previousWords[j] != "") {
+            for (var j = 0; j < inputWords.length; j++) {
+                
+                var inputWord = inputWords[j];
+                
+                if (inputWord != "") {
 
-                    var newInput;
-                    // if the new output word IS OR CONTAINS the previous input word
-                    // AND a match hasn't already been found for this word
-                    if (newOutputWord.indexOf(previousInputWord) != -1 &&
-                        wordMatches.indexOf(previousInputWord) == -1) {
-                        newInput = newOutputWord.replace(new RegExp('(^' + previousInputWord + ')', 'i'), function(match){
-                            //generates a string of replaceChars that is the length of match
-                            return new Array(match.length).join(replaceChar);
-                        });
-                        wordMatches.push(previousInputWord);
-                    } else {
-                        newInput = new Array(newOutputWord.length).join(replaceChar);
+                    // if a match hasn't already been found for this word
+                    if (wordMatches.indexOf(inputWord) == -1) {
+
+                        // if the new output word IS OR CONTAINS the previous input word
+                        if (autoSuggestWord.indexOf(inputWord) != -1) {
+
+                            console.log('inputWord: ' + inputWord);
+                            
+                            newInputWord = autoSuggestWord.replace(new RegExp('(' + inputWord + ')|.','gi'), function(c) {
+                                return c === inputWord ? c : replaceChar;
+                            });
+
+                            console.log('newInputWord: ' + newInputWord);
+
+                            // originalWords.push(inputWord);
+                            // wordMatches.push(inputWord);
+                            console.log(wordMatches);
+
+                        } else {
+                            console.log('fired else');
+                            newInputWord = new Array(autoSuggestWord.length + 1).join(replaceChar);
+                        }
+                        
+                        wordMatches.push(inputWord);
                     }
                 }
             }
 
-            newInputWords.push(newInput);            
+            newInputWords.push(newInputWord);
+            console.log(newInputWords);          
         }
 
-        input += ' ' + uCFirst(newInputWords.join(' ')) + '.';
-        console.log(input);
+        // console.log(wordMatches);
 
-        // console.log($('textarea#input')[0]);
-        $('#input').val(input);
+        input += ' ' + uCFirst(newInputWords.join(' ')) + '.';
+
+        // update the input
+        $('#input').val(input.trimLeft());
     
     }
-
-    function htmlEntities(str) {
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
-
 }
 
 
