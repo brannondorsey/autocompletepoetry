@@ -1,0 +1,36 @@
+body {
+	margin-top: 7em;
+}
+
+#input, #output{
+	font-family: Courier, monospace;
+	font-size: 2em;
+}
+
+p#output {
+	margin: 0em;
+	padding: .6em;
+}
+
+textarea {
+	/*border: none;*/
+	width: 70%;
+	height: 8em;
+	display: block;
+	margin: auto;
+	resize: vertical;
+	padding: .6em;
+	border-color: #E4E4E4;
+}
+
+textarea:focus {
+	outline: none;
+	border-color: #C4C4C4;
+}
+
+#input-container, #output-container {
+	width: 50%;
+	margin: none;
+	float: left;
+	padding: 0em;
+}
