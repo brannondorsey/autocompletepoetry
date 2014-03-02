@@ -1,7 +1,6 @@
+#[Autocomplete Poetry](http://brannondorsey.com/apps/autocomplete)
 
-#Autocomplete Poetry
-
-Autocomplete Poetry is an experimental writing tool that uses google's autocomplete results to create chance based language fragments.
+[Autocomplete Poetry](http://brannondorsey.com/apps/autocomplete) is an experimental writing tool that uses google's autocomplete results to create chance based language fragments.
 
 ![Screenshot](images/window_screenshot.png "Autocomplete Poetry Screenshot")
 
