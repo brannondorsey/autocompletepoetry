@@ -4,7 +4,7 @@
 
 ![Screenshot](images/window_screenshot.png "Autocomplete Poetry Screenshot")
 
-This is an instructional repo used for various JavaScript demos, classes, and workshops presented by [Brannon Dorsey](http://brannondorsey.com). Download a local version by clicking [here](http://brannondorsey/autocompletepoetry/archive/master.zip "Download!"). Once downloaded, double click the `index.html` file to launch the app.
+This is an instructional repo used for various JavaScript demos, classes, and workshops presented by [Brannon Dorsey](http://brannondorsey.com). Download a local version by clicking [here](http://github.com/brannondorsey/autocompletepoetry/archive/master.zip "Download!"). Once downloaded, double click the `index.html` file to launch the app.
 
 ##Important JavaScript methods
 Below is a list of __every__ JavaScript (and [jQuery](http://jquery.com/)) method that we will use in our app. Some of their functions change when multiple parameters are used. Click each link for more info.
