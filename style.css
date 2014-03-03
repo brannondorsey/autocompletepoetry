@@ -24,7 +24,7 @@ body {
 }
 
 p#output {
-
+	float: left;
 	width: 70%;
 	margin: 0em;
 	padding: .6em;
